@@ -81,6 +81,16 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
       should_change("@sam.follow_count", :by => -1) { @sam.follow_count }
     end
 
+    context "follow, then unfollow, then refollow" do
+      should "just reuse old follow" do
+        assert_difference ->{ Follow.unscoped { Follow.count } }, 1 do
+          @jon.follow(@sam)
+          @jon.stop_following(@sam)
+          @jon.follow(@sam)
+        end
+      end
+    end
+
     context "follows" do
       setup do
         @band_follow = Follow.where("follower_id = ? and follower_type = 'User' and followable_id = ? and followable_type = 'Band'", @sam.id, @oasis.id).first

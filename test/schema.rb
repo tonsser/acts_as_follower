@@ -8,6 +8,7 @@ ActiveRecord::Schema.define :version => 0 do
     t.boolean  "blocked", :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "unfollowed_at"
   end
 
   create_table :users, :force => true do |t|

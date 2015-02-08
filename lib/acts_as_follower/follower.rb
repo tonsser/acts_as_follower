@@ -29,14 +29,27 @@ module ActsAsFollower #:nodoc:
       # Does not allow duplicate records to be created.
       def follow(followable)
         if self != followable
-          self.follows.find_or_create_by(followable_id: followable.id, followable_type: parent_class_name(followable))
+          Follow.unscoped do
+            attributes = {
+              followable_id: followable.id,
+              followable_type: parent_class_name(followable)
+            }
+            old_follow = self.follows.find_by(attributes)
+
+            if old_follow.present?
+              old_follow.update!(:unfollowed_at => nil)
+              old_follow
+            else
+              self.follows.find_or_create_by(attributes)
+            end
+          end
         end
       end
 
       # Deletes the follow record if it exists.
       def stop_following(followable)
         if follow = get_follow(followable)
-          follow.destroy
+          follow.update!(unfollowed_at: Time.now)
         end
       end
 

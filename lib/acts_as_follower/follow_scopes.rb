@@ -27,11 +27,11 @@ module ActsAsFollower #:nodoc:
     end
 
     def unblocked
-      where(:blocked => false)
+      where(:blocked => false, :unfollowed_at => nil)
     end
 
     def blocked
-      where(:blocked => true)
+      where(:blocked => true, :unfollowed_at => nil)
     end
 
   end

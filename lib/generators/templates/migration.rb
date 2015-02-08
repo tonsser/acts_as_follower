@@ -5,6 +5,7 @@ class ActsAsFollowerMigration < ActiveRecord::Migration
       t.references :follower,   :polymorphic => true, :null => false
       t.boolean :blocked, :default => false, :null => false
       t.timestamps
+      t.datetime :unfollowed_at
     end
 
     add_index :follows, ["follower_id", "follower_type"],     :name => "fk_follows"
