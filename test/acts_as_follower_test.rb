@@ -89,6 +89,21 @@ class ActsAsFollowerTest < ActiveSupport::TestCase
           @jon.follow(@sam)
         end
       end
+
+      should "calls the block the first time you follow" do
+        probe = nil
+        @jon.follow(@sam) { probe = true }
+
+        assert_equal true, probe
+      end
+
+      should "doesn't call the block when unfollow, then refollow" do
+        @jon.follow(@sam)
+        probe = nil
+        @jon.follow(@sam) { probe = true }
+
+        assert_equal nil, probe
+      end
     end
 
     context "follows" do

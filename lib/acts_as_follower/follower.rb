@@ -40,7 +40,9 @@ module ActsAsFollower #:nodoc:
               old_follow.update!(:unfollowed_at => nil)
               old_follow
             else
-              self.follows.find_or_create_by(attributes)
+              follow = self.follows.find_or_create_by(attributes)
+              yield if block_given?
+              follow
             end
           end
         end
